@@ -6,3 +6,5 @@ node_modules/
 
 # thunder api client
 thunder_tests/
+
+.env
