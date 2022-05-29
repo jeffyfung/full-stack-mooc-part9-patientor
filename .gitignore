@@ -1,0 +1,8 @@
+# build folder
+build/
+
+# node modules
+node_modules/
+
+# thunder api client
+thunder_tests/
