@@ -29,4 +29,21 @@ router.post('/patients', (req, res) => {
   }
 });
 
+router.get('/patients/:id', (req, res) => {
+  try {
+    const id: string = req.params.id;
+    const rtn = PatientService.getPatientById(id);
+    if (!rtn) {
+      throw new Error('cannot find patient in DB');
+    }
+    res.status(200).json(rtn);
+  } catch (err: unknown) {
+    let errMsg: string = 'Error: ';
+    if (err instanceof Error) {
+      errMsg += err.message;
+    }
+    res.status(400).json(errMsg);
+  }
+});
+
 export = router;
