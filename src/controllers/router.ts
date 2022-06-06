@@ -15,7 +15,7 @@ router.get('/diagnoses', (_req, res) => {
 });
 
 router.get('/patients', (_req, res) => {
-  const rtn = PatientService.getAllWithoutSsn();
+  const rtn = PatientService.getAllPatients();
   res.status(200).json(rtn);
 });
 

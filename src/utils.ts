@@ -1,4 +1,4 @@
-import { Gender, NewPatientEntry } from './types';
+import { Entry, Gender, NewPatientEntry } from './interfaces/types';
 
 const parseString = (name: unknown): string => {
   if (!name || !isString(name)) {
@@ -14,12 +14,23 @@ const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
+const parseEntry = (entry: unknown): Entry => {
+  if (!entry || !isEntry(entry)) {
+    throw new Error('Incorrect or missing property type; should be Gender');
+  }
+  return entry;
+};
+
 const isString = (text: unknown): text is string => {
   return typeof text === 'string';
 };
 
 const isGender = (gender: any): gender is Gender => {
   return Object.values(Gender).includes(gender);
+};
+
+const isEntry = (entry: any): entry is Entry => {
+  return ['HealthCheck', 'OccupationalHealthcare', 'Hospital'].includes(entry.type);
 };
 
 export const toNewPatientEntry = (object: any): NewPatientEntry => {
@@ -29,7 +40,7 @@ export const toNewPatientEntry = (object: any): NewPatientEntry => {
     ssn: parseString(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseString(object.gender),
-    entries: [],
+    entries: object.entries.map((entry: any) => parseEntry(entry)),
   };
   return newEntry;
 };

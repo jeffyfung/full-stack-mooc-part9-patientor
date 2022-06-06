@@ -1,6 +1,8 @@
-import { Patient, PublicPatient, NewPatientEntry } from '../types';
+import { Patient, PublicPatient, NewPatientEntry } from '../interfaces/types';
 import patients from '../../data/patients';
 import { v1 as uuid } from 'uuid';
+
+const getAllPatients = (): Patient[] => patients;
 
 const getAllWithoutSsn = (): PublicPatient[] => {
   return patients.map((patient) => ({
@@ -27,6 +29,7 @@ const addPatient = (newPatient: NewPatientEntry): Patient => {
 };
 
 export = {
+  getAllPatients,
   getAllWithoutSsn,
   addPatient,
   getPatientById,
