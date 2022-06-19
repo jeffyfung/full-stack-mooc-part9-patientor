@@ -1,6 +1,7 @@
 import { Patient, PublicPatient, NewPatientEntry } from '../interfaces/types';
 import patients from '../../data/patients';
 import { v1 as uuid } from 'uuid';
+import { Entry, NewEntry } from '../interfaces/types';
 
 const getAllPatients = (): Patient[] => patients;
 
@@ -28,9 +29,22 @@ const addPatient = (newPatient: NewPatientEntry): Patient => {
   return newEntry;
 };
 
+const addEntryToPatient = (id: string, entry: NewEntry): Patient => {
+  let _entry = entry as Entry;
+  _entry['id'] = uuid();
+  for (let p of patients) {
+    if (p.id === id) {
+      p.entries = p.entries.concat(_entry);
+      return p;
+    }
+  }
+  throw new Error('Patient id is not found.');
+};
+
 export = {
   getAllPatients,
   getAllWithoutSsn,
   addPatient,
   getPatientById,
+  addEntryToPatient,
 };

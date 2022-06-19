@@ -2,6 +2,7 @@ import express from 'express';
 import DiagnosesService from '../services/DiagnosesService';
 import PatientService from '../services/PatientService';
 import { toNewPatientEntry } from '../utils';
+import { validateAsEntry } from '../interfaces/types';
 
 const router = express.Router();
 
@@ -36,6 +37,23 @@ router.get('/patients/:id', (req, res) => {
     if (!rtn) {
       throw new Error('cannot find patient in DB');
     }
+    res.status(200).json(rtn);
+  } catch (err: unknown) {
+    let errMsg: string = 'Error: ';
+    if (err instanceof Error) {
+      errMsg += err.message;
+    }
+    res.status(400).json(errMsg);
+  }
+});
+
+router.post('/patients/:id/entries', (req, res) => {
+  try {
+    const id: string = req.params.id;
+    if (!validateAsEntry(req.body)) {
+      throw new Error('type should be Entry');
+    }
+    const rtn = PatientService.addEntryToPatient(id, req.body);
     res.status(200).json(rtn);
   } catch (err: unknown) {
     let errMsg: string = 'Error: ';

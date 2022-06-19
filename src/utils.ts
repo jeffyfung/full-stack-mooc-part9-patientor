@@ -39,7 +39,7 @@ export const toNewPatientEntry = (object: any): NewPatientEntry => {
     dateOfBirth: parseString(object.dateOfBirth),
     ssn: parseString(object.ssn),
     gender: parseGender(object.gender),
-    occupation: parseString(object.gender),
+    occupation: parseString(object.occupation),
     entries: object.entries.map((entry: any) => parseEntry(entry)),
   };
   return newEntry;

@@ -1,3 +1,5 @@
+type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+
 export enum Gender {
   Male = 'male',
   Female = 'female',
@@ -46,7 +48,6 @@ interface HealthCheckEntry extends BaseEntry {
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: 'OccupationalHealthcare';
   employerName: string;
-  description: string;
   sickLeave?: {
     startDate: string;
     endDate: string;
@@ -55,7 +56,6 @@ interface OccupationalHealthcareEntry extends BaseEntry {
 
 interface HospitalEntry extends BaseEntry {
   type: 'Hospital';
-  description: string;
   discharge: {
     date: string;
     criteria: string;
@@ -63,3 +63,28 @@ interface HospitalEntry extends BaseEntry {
 }
 
 export type Entry = HealthCheckEntry | OccupationalHealthcareEntry | HospitalEntry;
+
+export type NewEntry = DistributiveOmit<Entry, 'id'>;
+
+export const validateAsEntry = (body: any): body is NewEntry => {
+  if (body) {
+    if (
+      !body.id &&
+      typeof body.description === 'string' &&
+      typeof body.date === 'string' &&
+      typeof body.specialist === 'string'
+    ) {
+      switch (body.type) {
+        case 'HealthCheck':
+          return [0, 1, 2, 3].includes(body.healthCheckRating);
+        case 'OccupationalHealthcare':
+          return typeof body.employerName === 'string';
+        case 'Hospital':
+          return (
+            typeof body.discharge?.date === 'string' && typeof body.discharge?.criteria === 'string'
+          );
+      }
+    }
+  }
+  throw new Error('type should be Entry');
+};
